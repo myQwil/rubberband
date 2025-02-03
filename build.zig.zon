@@ -3,7 +3,7 @@
     .version = "4.0.0",
     .dependencies = .{
         .rubberband = .{
-            .url = "https://github.com/breakfastquay/rubberband/archive/refs/tags/v4.0.0.tar.gz",
+            .url = "git+https://github.com/breakfastquay/rubberband#v4.0.0",
             .hash = "1220cbac056a111f163336314308a424f8cc7ec6113d36891fcc01683397475ff839",
         },
     },
