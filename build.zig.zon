@@ -1,6 +1,7 @@
 .{
     .name = "rubberband",
     .version = "4.0.0",
+    .minimum_zig_version = "0.14.0-dev.3026+c225b780e",
     .dependencies = .{
         .rubberband = .{
             .url = "git+https://github.com/breakfastquay/rubberband#v4.0.0",
