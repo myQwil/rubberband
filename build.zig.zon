@@ -1,18 +1,18 @@
 .{
-    .name = "rubberband",
-    .version = "4.0.0",
-    .minimum_zig_version = "0.14.0-dev.3026+c225b780e",
-    .dependencies = .{
-        .rubberband = .{
-            .url = "git+https://github.com/breakfastquay/rubberband#v4.0.0",
-            .hash = "1220cbac056a111f163336314308a424f8cc7ec6113d36891fcc01683397475ff839",
-        },
-    },
-    .paths = .{
-        "LICENSE",
-        "README.md",
-        "build.zig",
-        "build.zig.zon",
-        "rubberband.zig",
-    },
+	.name = "rubberband",
+	.version = "4.0.0",
+	.minimum_zig_version = "0.14.0-dev.3026+c225b780e",
+	.dependencies = .{
+		.rubberband = .{
+			.url = "git+https://github.com/breakfastquay/rubberband#v4.0.0",
+			.hash = "1220cbac056a111f163336314308a424f8cc7ec6113d36891fcc01683397475ff839",
+		},
+	},
+	.paths = .{
+		"LICENSE",
+		"README.md",
+		"build.zig",
+		"build.zig.zon",
+		"rubberband.zig",
+	},
 }
