@@ -237,8 +237,6 @@ pub const Options = struct {
 };
 
 pub const State = opaque {
-	const Self = @This();
-
 	/// Construct a time and pitch stretcher object to run at the given
 	/// sample rate, with the given number of channels.
 	///
@@ -273,31 +271,31 @@ pub const State = opaque {
 		options: Options,
 		initialTimeRatio: f64,
 		initialPitchScale: f64,
-	) !*Self {
+	) !*State {
 		return if ( rubberband_new(
 			sampleRate, channels, options.toInt(), initialTimeRatio, initialPitchScale)
 		) |self| self else error.OutOfMemory;
 	}
-	extern fn rubberband_new(c_uint, c_uint, Option, f64, f64) ?*Self;
+	extern fn rubberband_new(c_uint, c_uint, Option, f64, f64) ?*State;
 
 	pub const delete = rubberband_delete;
-	extern fn rubberband_delete(*Self) void;
+	extern fn rubberband_delete(*State) void;
 
 	/// Reset the stretcher's internal buffers.  The stretcher should
 	/// subsequently behave as if it had just been constructed
 	/// (although retaining the current time and pitch ratio).
 	pub const reset = rubberband_reset;
-	extern fn rubberband_reset(*Self) void;
+	extern fn rubberband_reset(*State) void;
 
 	/// Return the active internal engine version, according to the \c
 	/// OptionEngine flag supplied on construction. This will return 2
 	/// for the R2 (Faster) engine or 3 for the R3 (Finer) engine.
 	///
 	/// This function was added in Rubber Band Library v3.0.
-	pub fn getEngineVersion(self: *Self) u32 {
+	pub fn getEngineVersion(self: *State) u32 {
 		return @intCast(rubberband_get_engine_version(self));
 	}
-	extern fn rubberband_get_engine_version(*Self) c_uint;
+	extern fn rubberband_get_engine_version(*State) c_uint;
 
 	/// Set the time ratio for the stretcher.  This is the ratio of
 	/// stretched to unstretched duration -- not tempo.  For example, a
@@ -319,7 +317,7 @@ pub const State = opaque {
 	/// mechanism to ensure that setTimeRatio and `process()` cannot be
 	/// run at once (there is no internal mutex for this purpose).
 	pub const setTimeRatio = rubberband_set_time_ratio;
-	extern fn rubberband_set_time_ratio(*Self, ratio: f64) void;
+	extern fn rubberband_set_time_ratio(*State, ratio: f64) void;
 
 	/// Set the pitch scaling ratio for the stretcher.  This is the
 	/// ratio of target frequency to source frequency.  For example, a
@@ -345,7 +343,7 @@ pub const State = opaque {
 	/// mechanism to ensure that `setPitchScale` and `process()` cannot be
 	/// run at once (there is no internal mutex for this purpose).
 	pub const setPitchScale = rubberband_set_pitch_scale;
-	extern fn rubberband_set_pitch_scale(*Self, scale: f64) void;
+	extern fn rubberband_set_pitch_scale(*State, scale: f64) void;
 
 	/// Set a pitch scale for the vocal formant envelope separately
 	/// from the overall pitch scale.  This is a ratio of target
@@ -374,17 +372,17 @@ pub const State = opaque {
 	///
 	/// This function was added in Rubber Band Library v3.0.
 	pub const setFormantScale = rubberband_set_formant_scale;
-	extern fn rubberband_set_formant_scale(*Self, scale: f64) void;
+	extern fn rubberband_set_formant_scale(*State, scale: f64) void;
 
 	/// Return the last time ratio value that was set (either on
 	/// construction or with `setTimeRatio()`).
 	pub const getTimeRatio = rubberband_get_time_ratio;
-	extern fn rubberband_get_time_ratio(*const Self) f64;
+	extern fn rubberband_get_time_ratio(*const State) f64;
 
 	/// Return the last pitch scaling ratio value that was set (either
 	/// on construction or with setPitchScale()).
 	pub const getPitchScale = rubberband_get_pitch_scale;
-	extern fn rubberband_get_pitch_scale(*const Self) f64;
+	extern fn rubberband_get_pitch_scale(*const State) f64;
 
 	/// Return the last formant scaling ratio that was set with
 	/// `setFormantScale`, or 0.0 if the default automatic scaling is in
@@ -395,7 +393,7 @@ pub const State = opaque {
 	///
 	/// This function was added in Rubber Band Library v3.0.
 	pub const getFormantScale = rubberband_get_formant_scale;
-	extern fn rubberband_get_formant_scale(*const Self) f64;
+	extern fn rubberband_get_formant_scale(*const State) f64;
 
 	/// In real-time mode (unlike in Offline mode) the stretcher
 	/// performs no automatic padding or delay/latency compensation at
@@ -420,10 +418,10 @@ pub const State = opaque {
 	/// internally and both functions always return zero.
 	///
 	/// This function was added in Rubber Band Library v3.0.
-	pub fn getPreferredStartPad(self: *const Self) u32 {
+	pub fn getPreferredStartPad(self: *const State) u32 {
 		return @intCast(rubberband_get_preferred_start_pad(self));
 	}
-	extern fn rubberband_get_preferred_start_pad(*const Self) c_uint;
+	extern fn rubberband_get_preferred_start_pad(*const State) c_uint;
 
 	/// Return the output delay of the stretcher.  This is the number
 	/// of audio samples that one should discard at the start of the
@@ -443,31 +441,31 @@ pub const State = opaque {
 	/// with the number of samples needed at input to cause a block of
 	/// processing to handle (returned by getSamplesRequired()) which
 	/// is also sometimes referred to as latency.
-	pub fn getStartDelay(self: *const Self) u32 {
+	pub fn getStartDelay(self: *const State) u32 {
 		return @intCast(rubberband_get_start_delay(self));
 	}
-	extern fn rubberband_get_start_delay(*const Self) c_uint;
+	extern fn rubberband_get_start_delay(*const State) c_uint;
 
 	/// Return the number of channels this stretcher was constructed
 	/// with.
-	pub fn getChannelCount(self: *const Self) u32 {
+	pub fn getChannelCount(self: *const State) u32 {
 		return @intCast(rubberband_get_channel_count(self));
 	}
-	extern fn rubberband_get_channel_count(*const Self) c_uint;
+	extern fn rubberband_get_channel_count(*const State) c_uint;
 
 	/// Change a Transients configuration setting. This may be
 	/// called at any time in real-time mode.  It may not be called in
 	/// Offline mode (for which the transients option is fixed on
 	/// construction). This has no effect when using the R3 engine.
 	pub const setTransientsOption = rubberband_set_transients_option;
-	extern fn rubberband_set_transients_option(*Self, Options) void;
+	extern fn rubberband_set_transients_option(*State, Options) void;
 
 	/// Change a Detector configuration setting.  This may be
 	/// called at any time in real-time mode.  It may not be called in
 	/// Offline mode (for which the detector option is fixed on
 	/// construction). This has no effect when using the R3 engine.
 	pub const setDetectorOption = rubberband_set_detector_option;
-	extern fn rubberband_set_detector_option(*Self, Options) void;
+	extern fn rubberband_set_detector_option(*State, Options) void;
 
 	/// Change a Phase configuration setting.  This may be
 	/// called at any time in any mode. This has no effect when using
@@ -477,7 +475,7 @@ pub const State = opaque {
 	/// may not take effect immediately if processing is already under
 	/// way when this function is called.
 	pub const setPhaseOption = rubberband_set_phase_option;
-	extern fn rubberband_set_phase_option(*Self, Options) void;
+	extern fn rubberband_set_phase_option(*State, Options) void;
 
 	/// Change a Formant configuration setting.  This may be
 	/// called at any time in any mode.
@@ -486,14 +484,14 @@ pub const State = opaque {
 	/// may not take effect immediately if processing is already under
 	/// way when this function is called.
 	pub const setFormantOption = rubberband_set_formant_option;
-	extern fn rubberband_set_formant_option(*Self, Options) void;
+	extern fn rubberband_set_formant_option(*State, Options) void;
 
 	/// Change a Pitch configuration setting.  This may be
 	/// called at any time in real-time mode.  It may not be called in
 	/// Offline mode (for which the pitch option is fixed on
 	/// construction). This has no effect when using the R3 engine.
 	pub const setPitchOption = rubberband_set_pitch_option;
-	extern fn rubberband_set_pitch_option(*Self, Options) void;
+	extern fn rubberband_set_pitch_option(*State, Options) void;
 
 	/// Tell the stretcher exactly how many input sample frames it will
 	/// receive.  This is only useful in Offline mode, when it allows
@@ -506,10 +504,10 @@ pub const State = opaque {
 	/// individual samples. (For example, one second of stereo audio
 	/// sampled at 44100Hz yields a value of 44100 sample frames, not
 	/// 88200.)  This rule applies throughout the Rubber Band API.
-	pub fn setExpectedInputDuration(self: *Self, samples: u32) void {
+	pub fn setExpectedInputDuration(self: *State, samples: u32) void {
 		return rubberband_set_expected_input_duration(self, @intCast(samples));
 	}
-	extern fn rubberband_set_expected_input_duration(*Self, c_uint) void;
+	extern fn rubberband_set_expected_input_duration(*State, c_uint) void;
 
 	/// Ask the stretcher how many audio sample frames should be
 	/// provided as input in order to ensure that some more output
@@ -533,10 +531,10 @@ pub const State = opaque {
 	/// individual samples. (For example, one second of stereo audio
 	/// sampled at 44100Hz yields a value of 44100 sample frames, not
 	/// 88200.)  This rule applies throughout the Rubber Band API.
-	pub fn getSamplesRequired(self: *const Self) u32 {
+	pub fn getSamplesRequired(self: *const State) u32 {
 		return rubberband_get_samples_required(self);
 	}
-	extern fn rubberband_get_samples_required(*const Self) c_uint;
+	extern fn rubberband_get_samples_required(*const State) c_uint;
 
 	/// Tell the stretcher the maximum number of sample frames that you
 	/// will ever be passing in to a single process() call.  If you
@@ -572,10 +570,10 @@ pub const State = opaque {
 	/// individual samples. (For example, one second of stereo audio
 	/// sampled at 44100Hz yields a value of 44100 sample frames, not
 	/// 88200.)  This rule applies throughout the Rubber Band API.
-	pub fn setMaxProcessSize(self: *Self, samples: u32) void {
+	pub fn setMaxProcessSize(self: *State, samples: u32) void {
 		rubberband_set_max_process_size(self, samples);
 	}
-	extern fn rubberband_set_max_process_size(*Self, c_uint) void;
+	extern fn rubberband_set_max_process_size(*State, c_uint) void;
 
 	/// Obtain the overall maximum supported process buffer size in
 	/// sample frames, which is also the maximum acceptable value to
@@ -585,10 +583,10 @@ pub const State = opaque {
 	/// future releases.
 	///
 	/// This function was added in Rubber Band Library v3.3.
-	pub fn getProcessSizeLimit(self: *Self) u32 {
+	pub fn getProcessSizeLimit(self: *State) u32 {
 		return rubberband_get_process_size_limit(self);
 	}
-	extern fn rubberband_get_process_size_limit(*Self) c_uint;
+	extern fn rubberband_get_process_size_limit(*State) c_uint;
 
 	/// Provide a set of mappings from "before" to "after" sample
 	/// numbers so as to enforce a particular stretch profile.  The
@@ -612,11 +610,11 @@ pub const State = opaque {
 	/// separately to setTimeRatio(), otherwise the results may be
 	/// truncated or extended in unexpected ways regardless of the
 	/// extent of the frame numbers found in the key frame map.
-	pub fn setKeyFrameMap(self: *Self, from: []u32, to: []u32) void {
+	pub fn setKeyFrameMap(self: *State, from: []u32, to: []u32) void {
 		std.debug.assert(from.len == to.len);
 		rubberband_set_key_frame_map(self, from.len, from.ptr, to.ptr);
 	}
-	extern fn rubberband_set_key_frame_map(*Self, c_uint, [*]c_uint, [*]c_uint) void;
+	extern fn rubberband_set_key_frame_map(*State, c_uint, [*]c_uint, [*]c_uint) void;
 
 	/// Provide a block of "samples" sample frames for the stretcher to
 	/// study and calculate a stretch profile from.
@@ -641,14 +639,14 @@ pub const State = opaque {
 	/// Set "final" to true if this is the last block of data that will
 	/// be provided to study() before the first process() call.
 	pub fn study(
-		self: *Self,
+		self: *State,
 		input: [*]const [*]const f32,
 		samples: u32,
 		final: bool,
 	) void {
 		rubberband_study(self, input, samples, @intFromBool(final));
 	}
-	extern fn rubberband_study(*Self, [*]const [*]const f32, c_uint, c_int) void;
+	extern fn rubberband_study(*State, [*]const [*]const f32, c_uint, c_int) void;
 
 	/// Provide a block of "frames" sample frames for processing.
 	/// See also getSamplesRequired() and setMaxProcessSize().
@@ -666,14 +664,14 @@ pub const State = opaque {
 	///
 	/// Set "final" to true if this is the last block of input data.
 	pub fn process(
-		self: *Self,
+		self: *State,
 		input: [*]const [*]const f32,
 		frames: u32,
 		final: bool,
 	) void {
 		rubberband_process(self, input, frames, @intFromBool(final));
 	}
-	extern fn rubberband_process(*Self, [*]const [*]const f32, c_uint, c_uint) void;
+	extern fn rubberband_process(*State, [*]const [*]const f32, c_uint, c_uint) void;
 
 	/// Ask the stretcher how many audio sample frames of output data
 	/// are available for reading (via retrieve()).
@@ -692,11 +690,11 @@ pub const State = opaque {
 	///
 	/// This function returns -1 if all data has been fully processed
 	/// and all output read, and the stretch process is now finished.
-	pub fn available(self: *const Self) i32 {
+	pub fn available(self: *const State) i32 {
 		return rubberband_available(self);
 		// return if (res < 0) null else res;
 	}
-	extern fn rubberband_available(*const Self) c_int;
+	extern fn rubberband_available(*const State) c_int;
 
 	/// Obtain some processed output data from the stretcher.  Up to
 	/// "frames" samples will be stored in each of the output arrays
@@ -712,10 +710,10 @@ pub const State = opaque {
 	/// of stereo audio sampled at 44100Hz yields a value of 44100
 	/// sample frames, not 88200.)  This rule applies throughout the
 	/// Rubber Band API.
-	pub fn retrieve(self: *const Self, output: [*]const [*]f32, frames: u32) u32 {
+	pub fn retrieve(self: *const State, output: [*]const [*]f32, frames: u32) u32 {
 		return rubberband_retrieve(self, output, frames);
 	}
-	extern fn rubberband_retrieve(*const Self, [*]const [*]f32, c_uint) c_uint;
+	extern fn rubberband_retrieve(*const State, [*]const [*]f32, c_uint) c_uint;
 
 	/// Force the stretcher to calculate a stretch profile.  Normally
 	/// this happens automatically for the first process() call in
@@ -724,7 +722,7 @@ pub const State = opaque {
 	/// This function is provided for diagnostic purposes only and is
 	/// supported only with the R2 engine.
 	pub const calculateStretch = rubberband_calculate_stretch;
-	extern fn rubberband_calculate_stretch(*Self) void;
+	extern fn rubberband_calculate_stretch(*State) void;
 
 	/// Set the level of debug output.  The supported values are:
 	///
@@ -753,15 +751,15 @@ pub const State = opaque {
 	/// are RT-safe if your custom logger is RT-safe. Levels 2 and 3
 	/// are not guaranteed to be RT-safe in any conditions as they may
 	/// construct messages by allocation.
-	pub fn setDebugLevel(self: *Self, level: u32) void {
+	pub fn setDebugLevel(self: *State, level: u32) void {
 		rubberband_set_debug_level(self, level);
 	}
-	extern fn rubberband_set_debug_level(*Self, c_uint) void;
+	extern fn rubberband_set_debug_level(*State, c_uint) void;
 
 	/// Set the default level of debug output for subsequently
 	/// constructed stretchers.
-	pub fn setDefaultDebugLevel(self: *Self, level: u32) void {
+	pub fn setDefaultDebugLevel(self: *State, level: u32) void {
 		rubberband_set_debug_level(self, level);
 	}
-	extern fn rubberband_set_default_debug_level(*Self, c_uint) void;
+	extern fn rubberband_set_default_debug_level(*State, c_uint) void;
 };
