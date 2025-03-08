@@ -1,11 +1,12 @@
 .{
-	.name = "rubberband",
+	.name = .rubberband,
 	.version = "4.0.0",
-	.minimum_zig_version = "0.14.0-dev.3026+c225b780e",
+	.fingerprint = 0x975511f2ace8b945,
+	.minimum_zig_version = "0.14.0",
 	.dependencies = .{
 		.rubberband = .{
 			.url = "git+https://github.com/breakfastquay/rubberband#v4.0.0",
-			.hash = "1220cbac056a111f163336314308a424f8cc7ec6113d36891fcc01683397475ff839",
+			.hash = "N-V-__8AAIEQFwDLrAVqER8WMzYxQwikJPjMfsYRPTaJH8wB",
 		},
 	},
 	.paths = .{
