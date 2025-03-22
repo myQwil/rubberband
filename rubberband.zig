@@ -4,7 +4,7 @@ pub const Options = packed struct(c_uint) {
 	/// How the time-stretcher will be invoked.
 	///
 	/// These options may not be changed after construction.
-	const Process = enum(u1) {
+	pub const Process = enum(u1) {
 		/// In this mode the input data needs to be provided
 		/// twice, once to `study()`, which calculates a stretch profile
 		/// for the audio, and once to `process()`, which stretches it.
@@ -22,7 +22,7 @@ pub const Options = packed struct(c_uint) {
 	///
 	/// These options may be changed after construction when running in
 	/// real-time mode, but not when running in offline mode.
-	const Transients = enum(u2) {
+	pub const Transients = enum(u2) {
 		/// R2 engine only - Reset component phases at the
 		/// peak of each transient (the start of a significant note or
 		/// percussive event).  This, the default setting, usually
@@ -53,7 +53,7 @@ pub const Options = packed struct(c_uint) {
 	///
 	/// These options may be changed after construction when running
 	/// in real-time mode, but not when running in offline mode.
-	const Detector = enum(u2) {
+	pub const Detector = enum(u2) {
 		/// Use a general-purpose
 		/// transient detector which is likely to be good for most
 		/// situations.  This is the default.
@@ -75,7 +75,7 @@ pub const Options = packed struct(c_uint) {
 	/// These options have no effect when using the R3 engine.
 	///
 	/// These options may be changed at any time.
-	const Phase = enum(u1) {
+	pub const Phase = enum(u1) {
 		/// Adjust phases when stretching in
 		/// such a way as to try to retain the continuity of phase
 		/// relationships between adjacent frequency bins whose phases
@@ -91,7 +91,7 @@ pub const Options = packed struct(c_uint) {
 	/// The threading model of the stretcher.
 	///
 	/// These options may not be changed after construction.
-	const Threading = enum(u2) {
+	pub const Threading = enum(u2) {
 		/// Permit the stretcher to
 		/// determine its own threading model.  In the R2 engine this
 		/// means using one processing thread per audio channel in
@@ -116,7 +116,7 @@ pub const Options = packed struct(c_uint) {
 	/// as well as output quality.
 	///
 	/// These options may not be changed after construction.
-	const Window = enum(u2) {
+	pub const Window = enum(u2) {
 		/// Use the default window size.
 		/// The actual size will vary depending on other parameters.
 		/// This option is expected to produce better results than the
@@ -154,7 +154,7 @@ pub const Options = packed struct(c_uint) {
 	/// These options have no effect when using the R3 engine.
 	///
 	/// These options may not be changed after construction.
-	const Smoothing = enum(u1) {
+	pub const Smoothing = enum(u1) {
 		/// Do not use time-domain smoothing. This is the default.
 		off = 0,
 		/// Use time-domain smoothing.  This
@@ -170,7 +170,7 @@ pub const Options = packed struct(c_uint) {
 	/// These options affect both the R2 and R3 engines.
 	///
 	/// These options may be changed at any time.
-	const Formant = enum(u1) {
+	pub const Formant = enum(u1) {
 		/// Apply no special formant
 		/// processing.  The spectral envelope will be pitch shifted as
 		/// normal.  This is the default.
@@ -189,7 +189,7 @@ pub const Options = packed struct(c_uint) {
 	///
 	/// In the R2 engine these options may be changed at any time;
 	/// in the R3 engine they may be set only on construction.
-	const Pitch = enum(u2) {
+	pub const Pitch = enum(u2) {
 		/// Favour CPU cost over sound
 		/// quality. This is the default. Use this when time-stretching
 		/// only, or for fixed pitch shifts where CPU usage is of
@@ -214,7 +214,7 @@ pub const Options = packed struct(c_uint) {
 	/// The method used for processing two-channel stereo audio.
 	///
 	/// These options may not be changed after construction.
-	const Channels = enum(u1) {
+	pub const Channels = enum(u1) {
 		/// Channels are handled for maximum
 		/// individual fidelity, at the expense of synchronisation. In
 		/// the R3 engine, this means frequency-bin synchronisation is
@@ -242,7 +242,7 @@ pub const Options = packed struct(c_uint) {
 	/// The core Rubber Band processing engine to be used.
 	///
 	/// These options may not be changed after construction.
-	const Engine = enum(u1) {
+	pub const Engine = enum(u1) {
 		/// Use the Rubber Band Library R2
 		/// (Faster) engine. This is the engine implemented in Rubber
 		/// Band Library v1.x and v2.x, and it remains the default in
