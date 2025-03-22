@@ -9,10 +9,11 @@ pub fn build(b: *std.Build) void {
 	const target = b.standardTargetOptions(.{});
 	const optimize = b.standardOptimizeOption(.{});
 
-	const defaults = Options{};
-	const opt = Options{
-		.linkage = b.option(LinkMode, "linkage", "Library linking method")
-			orelse defaults.linkage,
+	const defaults: Options = .{};
+	const opt: Options = .{
+		.linkage = b.option(LinkMode, "linkage",
+			"Library linking method"
+		) orelse defaults.linkage,
 	};
 
 	const lib = b.addLibrary(.{
