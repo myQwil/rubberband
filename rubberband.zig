@@ -342,7 +342,7 @@ pub const State = opaque {
 	/// changed after the study pass has begun. (However, see
 	/// `setKeyFrameMap()` for a way to do pre-planned variable time
 	/// stretching in offline mode.)
-	pub fn new(
+	pub fn init(
 		sampleRate: c_uint,
 		channels: c_uint,
 		options: Options,
@@ -354,7 +354,7 @@ pub const State = opaque {
 	}
 	extern fn rubberband_new(c_uint, c_uint, Options, f64, f64) ?*State;
 
-	pub const delete = rubberband_delete;
+	pub const deinit = rubberband_delete;
 	extern fn rubberband_delete(*State) void;
 
 	/// Reset the stretcher's internal buffers.  The stretcher should
