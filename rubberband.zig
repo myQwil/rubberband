@@ -305,9 +305,7 @@ pub const Options = packed struct(c_uint) {
 
 	engine: Engine = .faster,
 
-	_unused: @Type(.{.int = .{
-		.signedness = .unsigned, .bits = @bitSizeOf(c_uint) - 30,
-	}}) = 0,
+	_unused: std.meta.Int(.unsigned, @bitSizeOf(c_uint) - 30) = 0,
 
 	const default: Options = .{};
 	const percussive: Options = .{ .window = .short, .phase = .independent };
