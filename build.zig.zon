@@ -5,8 +5,8 @@
 	.minimum_zig_version = "0.15.1",
 	.dependencies = .{
 		.rubberband = .{
-			.url = "git+https://github.com/breakfastquay/rubberband#v4.0.0",
-			.hash = "N-V-__8AAIEQFwDLrAVqER8WMzYxQwikJPjMfsYRPTaJH8wB",
+			.url = "git+https://github.com/myQwil/rubberband-cpp#612e5df56e79f64f3aa07189c3cd689e489bf7f8",
+			.hash = "N-V-__8AAOsQFwAxmAOFgAViqXF0roJ-9UfMoh7Wyu3YdygZ",
 		},
 	},
 	.paths = .{
