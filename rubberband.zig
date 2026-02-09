@@ -1,5 +1,3 @@
-const std = @import("std");
-
 pub const Options = packed struct(c_uint) {
 	/// How the time-stretcher will be invoked.
 	///
@@ -305,7 +303,7 @@ pub const Options = packed struct(c_uint) {
 
 	engine: Engine = .faster,
 
-	_unused: std.meta.Int(.unsigned, @bitSizeOf(c_uint) - 30) = 0,
+	_unused: @Int(.unsigned, @bitSizeOf(c_uint) - 30) = 0,
 
 	const default: Options = .{};
 	const percussive: Options = .{ .window = .short, .phase = .independent };
