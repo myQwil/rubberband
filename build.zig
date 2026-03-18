@@ -31,7 +31,7 @@ pub fn build(b: *std.Build) !void {
 	const mem = b.allocator;
 	const os = target.result.os.tag;
 
-	var files: std.ArrayList([]const u8) = .{};
+	var files: std.ArrayList([]const u8) = .empty;
 	defer files.deinit(mem);
 
 	try files.appendSlice(mem, &.{
