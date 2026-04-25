@@ -2,7 +2,7 @@
 	.name = .rubberband,
 	.version = "4.0.0",
 	.fingerprint = 0x975511f2ace8b945,
-	.minimum_zig_version = "0.15.1",
+	.minimum_zig_version = "0.16.0",
 	.dependencies = .{
 		.rubberband = .{
 			.url = "git+https://github.com/myQwil/rubberband-cpp#612e5df56e79f64f3aa07189c3cd689e489bf7f8",
@@ -10,10 +10,11 @@
 		},
 	},
 	.paths = .{
-		"LICENSE",
-		"README.md",
+		"examples",
 		"build.zig",
 		"build.zig.zon",
+		"LICENSE",
+		"README.md",
 		"rubberband.zig",
 	},
 }

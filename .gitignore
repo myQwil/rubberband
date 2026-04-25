@@ -1,4 +1,10 @@
+# Zig
+.zig-cache/
 zig-out/
 zig-pkg/
-.zig-cache/
+
+# Upstream
+upstream/
+
+# IDEs
 .vscode/
