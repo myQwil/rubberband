@@ -25,23 +25,23 @@ pub const Options = packed struct(c_uint) {
 	pub const Transients = enum(u2) {
 		/// R2 engine only - Reset component phases at the
 		/// peak of each transient (the start of a significant note or
-		/// percussive event).  This, the default setting, usually
+		/// percussive event). This, the default setting, usually
 		/// results in a clear-sounding output; but it is not always
 		/// consistent, and may cause interruptions in stable sounds
-		/// present at the same time as transient events.  The
+		/// present at the same time as transient events. The
 		/// OptionDetector flags (below) can be used to tune this to some
 		/// extent.
 		crisp = 0,
 		/// R2 engine only - Reset component phases at the
 		/// peak of each transient, outside a frequency range typical of
-		/// musical fundamental frequencies.  The results may be more
+		/// musical fundamental frequencies. The results may be more
 		/// regular for mixed stable and percussive notes than
-		/// `transients_crisp`, but with a "phasier" sound.  The
+		/// `transients_crisp`, but with a "phasier" sound. The
 		/// balance may sound very good for certain types of music and
 		/// fairly bad for others.
 		mixed = 1,
 		/// R2 engine only - Do not reset component phases
-		/// at any point.  The results will be smoother and more regular
+		/// at any point. The results will be smoother and more regular
 		/// but may be less clear than with either of the other
 		/// transients flags.
 		smooth = 2,
@@ -56,14 +56,14 @@ pub const Options = packed struct(c_uint) {
 	pub const Detector = enum(u2) {
 		/// Use a general-purpose
 		/// transient detector which is likely to be good for most
-		/// situations.  This is the default.
+		/// situations. This is the default.
 		compound = 0,
 		/// Detect percussive
-		/// transients.  Note that this was the default and only option
+		/// transients. Note that this was the default and only option
 		/// in Rubber Band versions prior to 1.5.
 		percussive = 1,
 		/// Use an onset detector with less
-		/// of a bias toward percussive transients.  This may give better
+		/// of a bias toward percussive transients. This may give better
 		/// results with certain material (e.g. relatively monophonic
 		/// piano music).
 		soft = 2,
@@ -79,11 +79,11 @@ pub const Options = packed struct(c_uint) {
 		/// Adjust phases when stretching in
 		/// such a way as to try to retain the continuity of phase
 		/// relationships between adjacent frequency bins whose phases
-		/// are behaving in similar ways.  This, the default setting,
+		/// are behaving in similar ways. This, the default setting,
 		/// should give good results in most situations.
 		laminar = 0,
 		/// Adjust the phase in each
-		/// frequency bin independently from its neighbours.  This
+		/// frequency bin independently from its neighbours. This
 		/// usually results in a slightly softer, phasier sound.
 		independent = 1,
 	};
@@ -93,11 +93,11 @@ pub const Options = packed struct(c_uint) {
 	/// These options may not be changed after construction.
 	pub const Threading = enum(u2) {
 		/// Permit the stretcher to
-		/// determine its own threading model.  In the R2 engine this
+		/// determine its own threading model. In the R2 engine this
 		/// means using one processing thread per audio channel in
 		/// offline mode if the stretcher is able to determine that more
 		/// than one CPU is available, and one thread only in real-time
-		/// mode.  The R3 engine does not currently have a multi-threaded
+		/// mode. The R3 engine does not currently have a multi-threaded
 		/// mode, but if one is introduced in future, this option may use
 		/// it. This is the default.
 		auto = 0,
@@ -157,7 +157,7 @@ pub const Options = packed struct(c_uint) {
 	pub const Smoothing = enum(u1) {
 		/// Do not use time-domain smoothing. This is the default.
 		off = 0,
-		/// Use time-domain smoothing.  This
+		/// Use time-domain smoothing. This
 		/// will result in a softer sound with some audible artifacts
 		/// around sharp transients, but it may be appropriate for longer
 		/// stretches of some instruments and can mix well with
@@ -172,11 +172,11 @@ pub const Options = packed struct(c_uint) {
 	/// These options may be changed at any time.
 	pub const Formant = enum(u1) {
 		/// Apply no special formant
-		/// processing.  The spectral envelope will be pitch shifted as
-		/// normal.  This is the default.
+		/// processing. The spectral envelope will be pitch shifted as
+		/// normal. This is the default.
 		shifted = 0,
 		/// Preserve the spectral
-		/// envelope of the unshifted signal.  This permits shifting the
+		/// envelope of the unshifted signal. This permits shifting the
 		/// note frequency without so substantially affecting the
 		/// perceived pitch profile of the voice or instrument.
 		preserved = 1,
@@ -219,8 +219,8 @@ pub const Options = packed struct(c_uint) {
 		/// individual fidelity, at the expense of synchronisation. In
 		/// the R3 engine, this means frequency-bin synchronisation is
 		/// maintained more closely for lower-frequency content than
-		/// higher.  In R2, it means the stereo channels are processed
-		/// individually and only synchronised at transients.  In both
+		/// higher. In R2, it means the stereo channels are processed
+		/// individually and only synchronised at transients. In both
 		/// engines this gives the highest quality for the individual
 		/// channels but a more diffuse stereo image, an unnatural
 		/// increase in "width", and generally a loss of mono
@@ -231,7 +231,7 @@ pub const Options = packed struct(c_uint) {
 		/// higher synchronisation at some expense of individual
 		/// fidelity. In particular, a stretcher processing two channels
 		/// will treat its input as a stereo pair and aim to maximise
-		/// clarity at the centre and preserve mono compatibility.  This
+		/// clarity at the centre and preserve mono compatibility. This
 		/// gives relatively less stereo space and width than the
 		/// default, as well as slightly lower fidelity for individual
 		/// channel content, but the results may be more appropriate for
@@ -356,7 +356,7 @@ pub const State = opaque {
 		c.rubberband_delete(@ptrCast(self));
 	}
 
-	/// Reset the stretcher's internal buffers.  The stretcher should
+	/// Reset the stretcher's internal buffers. The stretcher should
 	/// subsequently behave as if it had just been constructed
 	/// (although retaining the current time and pitch ratio).
 	pub fn reset(self: *State) void {
@@ -372,8 +372,8 @@ pub const State = opaque {
 		return @intCast(c.rubberband_get_engine_version(@ptrCast(@constCast(self))));
 	}
 
-	/// Set the time ratio for the stretcher.  This is the ratio of
-	/// stretched to unstretched duration -- not tempo.  For example, a
+	/// Set the time ratio for the stretcher. This is the ratio of
+	/// stretched to unstretched duration -- not tempo. For example, a
 	/// ratio of 2.0 would make the audio twice as long (i.e. halve the
 	/// tempo); 0.5 would make it half as long (i.e. double the tempo);
 	/// 1.0 would leave the duration unaffected.
@@ -387,7 +387,7 @@ pub const State = opaque {
 	/// If the stretcher was constructed in real-time mode, the time
 	/// ratio may be varied during operation; this function may be
 	/// called at any time, so long as it is not called concurrently
-	/// with `process()`.  You should either call this function from the
+	/// with `process()`. You should either call this function from the
 	/// same thread as `process()`, or provide your own mutex or similar
 	/// mechanism to ensure that setTimeRatio and `process()` cannot be
 	/// run at once (there is no internal mutex for this purpose).
@@ -395,8 +395,8 @@ pub const State = opaque {
 		c.rubberband_set_time_ratio(@ptrCast(self), ratio);
 	}
 
-	/// Set the pitch scaling ratio for the stretcher.  This is the
-	/// ratio of target frequency to source frequency.  For example, a
+	/// Set the pitch scaling ratio for the stretcher. This is the
+	/// ratio of target frequency to source frequency. For example, a
 	/// ratio of 2.0 would shift up by one octave; 0.5 down by one
 	/// octave; or 1.0 leave the pitch unaffected.
 	///
@@ -414,7 +414,7 @@ pub const State = opaque {
 	/// If the stretcher was constructed in real-time mode, the pitch
 	/// scaling ratio may be varied during operation; this function may
 	/// be called at any time, so long as it is not called concurrently
-	/// with `process()`.  You should either call this function from the
+	/// with `process()`. You should either call this function from the
 	/// same thread as `process()`, or provide your own mutex or similar
 	/// mechanism to ensure that `setPitchScale` and `process()` cannot be
 	/// run at once (there is no internal mutex for this purpose).
@@ -423,8 +423,8 @@ pub const State = opaque {
 	}
 
 	/// Set a pitch scale for the vocal formant envelope separately
-	/// from the overall pitch scale.  This is a ratio of target
-	/// frequency to source frequency.  For example, a ratio of 2.0
+	/// from the overall pitch scale. This is a ratio of target
+	/// frequency to source frequency. For example, a ratio of 2.0
 	/// would shift the formant envelope up by one octave; 0.5 down by
 	/// one octave; or 1.0 leave the formant unaffected.
 	///
@@ -503,7 +503,7 @@ pub const State = opaque {
 		return c.rubberband_get_preferred_start_pad(@ptrCast(@constCast(self)));
 	}
 
-	/// Return the output delay of the stretcher.  This is the number
+	/// Return the output delay of the stretcher. This is the number
 	/// of audio samples that one should discard at the start of the
 	/// output, after padding the start of the input with
 	/// getPreferredStartPad(), in order to ensure that the resulting
@@ -532,7 +532,7 @@ pub const State = opaque {
 	}
 
 	/// Change a Transients configuration setting. This may be
-	/// called at any time in real-time mode.  It may not be called in
+	/// called at any time in real-time mode. It may not be called in
 	/// Offline mode (for which the transients option is fixed on
 	/// construction). This has no effect when using the R3 engine.
 	pub fn setTransientsOption(self: *State, opt: Options.Transients) void {
@@ -540,8 +540,8 @@ pub const State = opaque {
 			@ptrCast(self), @bitCast(Options{ .transients = opt }));
 	}
 
-	/// Change a Detector configuration setting.  This may be
-	/// called at any time in real-time mode.  It may not be called in
+	/// Change a Detector configuration setting. This may be
+	/// called at any time in real-time mode. It may not be called in
 	/// Offline mode (for which the detector option is fixed on
 	/// construction). This has no effect when using the R3 engine.
 	pub fn setDetectorOption(self: *State, opt: Options.Detector) void {
@@ -549,7 +549,7 @@ pub const State = opaque {
 			@ptrCast(self), @bitCast(Options{ .detector = opt }));
 	}
 
-	/// Change a Phase configuration setting.  This may be
+	/// Change a Phase configuration setting. This may be
 	/// called at any time in any mode. This has no effect when using
 	/// the R3 engine.
 	///
@@ -561,7 +561,7 @@ pub const State = opaque {
 			@ptrCast(self), @bitCast(Options{ .phase = opt }));
 	}
 
-	/// Change a Formant configuration setting.  This may be
+	/// Change a Formant configuration setting. This may be
 	/// called at any time in any mode.
 	///
 	/// Note that if running multi-threaded in Offline mode, the change
@@ -572,8 +572,8 @@ pub const State = opaque {
 			@ptrCast(self), @bitCast(Options{ .formant = opt }));
 	}
 
-	/// Change a Pitch configuration setting.  This may be
-	/// called at any time in real-time mode.  It may not be called in
+	/// Change a Pitch configuration setting. This may be
+	/// called at any time in real-time mode. It may not be called in
 	/// Offline mode (for which the pitch option is fixed on
 	/// construction). This has no effect when using the R3 engine.
 	pub fn setPitchOption(self: *State, opt: Options.Pitch) void {
@@ -582,16 +582,16 @@ pub const State = opaque {
 	}
 
 	/// Tell the stretcher exactly how many input sample frames it will
-	/// receive.  This is only useful in Offline mode, when it allows
+	/// receive. This is only useful in Offline mode, when it allows
 	/// the stretcher to ensure that the number of output samples is
-	/// exactly correct.  In real-time mode no such guarantee is
+	/// exactly correct. In real-time mode no such guarantee is
 	/// possible and this value is ignored.
 	///
 	/// Note that the value of "samples" refers to the number of audio
 	/// sample frames, which may be multi-channel, not the number of
 	/// individual samples. (For example, one second of stereo audio
 	/// sampled at 44100Hz yields a value of 44100 sample frames, not
-	/// 88200.)  This rule applies throughout the Rubber Band API.
+	/// 88200.) This rule applies throughout the Rubber Band API.
 	pub fn setExpectedInputDuration(self: *State, samples: c_uint) void {
 		c.rubberband_set_expected_input_duration(@ptrCast(self), samples);
 	}
@@ -605,7 +605,7 @@ pub const State = opaque {
 	/// for each cycle, then your normal mode of operation would be to
 	/// loop querying this function; providing that number of samples
 	/// to process(); and reading the output (repeatedly if necessary)
-	/// using available() and retrieve().  See setMaxProcessSize() for
+	/// using available() and retrieve(). See setMaxProcessSize() for
 	/// a more suitable operating mode for applications that do have
 	/// external block size constraints.
 	///
@@ -617,13 +617,13 @@ pub const State = opaque {
 	/// frames, which may be multi-channel, not the number of
 	/// individual samples. (For example, one second of stereo audio
 	/// sampled at 44100Hz yields a value of 44100 sample frames, not
-	/// 88200.)  This rule applies throughout the Rubber Band API.
+	/// 88200.) This rule applies throughout the Rubber Band API.
 	pub fn getSamplesRequired(self: *const State) c_uint {
 		return c.rubberband_get_samples_required(@ptrCast(@constCast(self)));
 	}
 
 	/// Tell the stretcher the maximum number of sample frames that you
-	/// will ever be passing in to a single process() call.  If you
+	/// will ever be passing in to a single process() call. If you
 	/// don't call this, the stretcher will assume that you are calling
 	/// getSamplesRequired() at each cycle and are never passing more
 	/// samples than are suggested by that function.
@@ -633,7 +633,7 @@ pub const State = opaque {
 	/// would be to provide that block size to this function; to loop
 	/// calling process() with that size of block; after each call to
 	/// process(), test whether output has been generated by calling
-	/// available(); and, if so, call retrieve() to obtain it.  See
+	/// available(); and, if so, call retrieve() to obtain it. See
 	/// getSamplesRequired() for a more suitable operating mode for
 	/// applications without such external constraints.
 	///
@@ -655,7 +655,7 @@ pub const State = opaque {
 	/// sample frames, which may be multi-channel, not the number of
 	/// individual samples. (For example, one second of stereo audio
 	/// sampled at 44100Hz yields a value of 44100 sample frames, not
-	/// 88200.)  This rule applies throughout the Rubber Band API.
+	/// 88200.) This rule applies throughout the Rubber Band API.
 	pub fn setMaxProcessSize(self: *State, samples: c_uint) void {
 		c.rubberband_set_max_process_size(@ptrCast(self), samples);
 	}
@@ -673,24 +673,24 @@ pub const State = opaque {
 	}
 
 	/// Provide a set of mappings from "before" to "after" sample
-	/// numbers so as to enforce a particular stretch profile.  The
+	/// numbers so as to enforce a particular stretch profile. The
 	/// argument is a map from audio sample frame number in the source
 	/// material, to the corresponding sample frame number in the
-	/// stretched output.  The mapping should be for key frames only,
+	/// stretched output. The mapping should be for key frames only,
 	/// with a "reasonable" gap between mapped samples.
 	///
 	/// This function cannot be used in RealTime mode.
 	///
 	/// This function may not be called after the first call to
-	/// process().  It should be called after the time and pitch ratios
+	/// process(). It should be called after the time and pitch ratios
 	/// have been set; the results of changing the time and pitch
-	/// ratios after calling this function are undefined.  Calling
+	/// ratios after calling this function are undefined. Calling
 	/// reset() will clear this mapping.
 	///
 	/// The key frame map only affects points within the material; it
 	/// does not determine the overall stretch ratio (that is, the
 	/// ratio between the output material's duration and the source
-	/// material's duration).  You need to provide this ratio
+	/// material's duration). You need to provide this ratio
 	/// separately to setTimeRatio(), otherwise the results may be
 	/// truncated or extended in unexpected ways regardless of the
 	/// extent of the frame numbers found in the key frame map.
@@ -702,13 +702,13 @@ pub const State = opaque {
 	/// study and calculate a stretch profile from.
 	///
 	/// This is only meaningful in Offline mode, and is required if
-	/// running in that mode.  You should pass the entire input through
+	/// running in that mode. You should pass the entire input through
 	/// study() before any process() calls are made, as a sequence of
 	/// blocks in individual study() calls, or as a single large block.
 	///
 	/// "input" should point to de-interleaved audio data with one
 	/// float array per channel. Sample values are conventionally
-	/// expected to be in the range -1.0f to +1.0f.  "frames" supplies
+	/// expected to be in the range -1.0f to +1.0f. "frames" supplies
 	/// the number of audio sample frames available in "input". If
 	/// "frames" is zero, "input" may be NULL.
 	/// 
@@ -728,14 +728,14 @@ pub const State = opaque {
 	///
 	/// "input" should point to de-interleaved audio data with one
 	/// float array per channel. Sample values are conventionally
-	/// expected to be in the range -1.0f to +1.0f.  "frames" supplies
+	/// expected to be in the range -1.0f to +1.0f. "frames" supplies
 	/// the number of audio sample frames available in "input".
 	///
 	/// Note that the value of "frames" refers to the number of audio
 	/// sample frames, which may be multi-channel, not the number of
 	/// individual samples. (For example, one second of stereo audio
 	/// sampled at 44100Hz yields a value of 44100 sample frames, not
-	/// 88200.)  This rule applies throughout the Rubber Band API.
+	/// 88200.) This rule applies throughout the Rubber Band API.
 	///
 	/// Set "final" to true if this is the last block of input data.
 	pub fn process(
@@ -753,14 +753,14 @@ pub const State = opaque {
 	/// This function returns 0 if no frames are available: this
 	/// usually means more input data needs to be provided, but if the
 	/// stretcher is running in threaded mode it may just mean that not
-	/// enough data has yet been processed.  Call getSamplesRequired()
+	/// enough data has yet been processed. Call getSamplesRequired()
 	/// to discover whether more input is needed.
 	///
 	/// Note that the return value refers to the number of audio sample
 	/// frames, which may be multi-channel, not the number of
 	/// individual samples. (For example, one second of stereo audio
 	/// sampled at 44100Hz yields a value of 44100 sample frames, not
-	/// 88200.)  This rule applies throughout the Rubber Band API.
+	/// 88200.) This rule applies throughout the Rubber Band API.
 	///
 	/// This function returns -1 if all data has been fully processed
 	/// and all output read, and the stretch process is now finished.
@@ -768,10 +768,10 @@ pub const State = opaque {
 		return c.rubberband_available(@ptrCast(@constCast(self)));
 	}
 
-	/// Obtain some processed output data from the stretcher.  Up to
+	/// Obtain some processed output data from the stretcher. Up to
 	/// "frames" samples will be stored in each of the output arrays
 	/// (one per channel for de-interleaved audio data) pointed to by
-	/// "output".  The number of sample frames available to be
+	/// "output". The number of sample frames available to be
 	/// retrieved can be queried beforehand with a call to available().
 	/// The return value is the actual number of sample frames
 	/// retrieved.
@@ -780,13 +780,13 @@ pub const State = opaque {
 	/// the number of audio sample frames, which may be multi-channel,
 	/// not the number of individual samples. (For example, one second
 	/// of stereo audio sampled at 44100Hz yields a value of 44100
-	/// sample frames, not 88200.)  This rule applies throughout the
+	/// sample frames, not 88200.) This rule applies throughout the
 	/// Rubber Band API.
 	pub fn retrieve(self: *const State, output: [*]const [*]f32, samples: c_uint) c_uint {
 		return c.rubberband_retrieve(@ptrCast(@constCast(self)), output, samples);
 	}
 
-	/// Force the stretcher to calculate a stretch profile.  Normally
+	/// Force the stretcher to calculate a stretch profile. Normally
 	/// this happens automatically for the first process() call in
 	/// offline mode.
 	///
