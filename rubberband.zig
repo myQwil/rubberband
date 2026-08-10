@@ -1,4 +1,5 @@
 const c = @import("cdef");
+const Oom = @import("std").mem.Allocator.Error;
 
 pub const Options = packed struct(c_uint) {
 	/// How the time-stretcher will be invoked.
@@ -346,7 +347,7 @@ pub const State = opaque {
 		time_ratio: f64,
 		pitch_scale: f64,
 		options: Options,
-	) !*State {
+	) Oom!*State {
 		const s = c.rubberband_new(
 			sample_rate, channels, @bitCast(options), time_ratio, pitch_scale);
 		return if (s) |state| @ptrCast(state) else error.OutOfMemory;
