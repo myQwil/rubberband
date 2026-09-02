@@ -341,7 +341,7 @@ pub const State = opaque {
 	/// changed after the study pass has begun. (However, see
 	/// `setKeyFrameMap()` for a way to do pre-planned variable time
 	/// stretching in offline mode.)
-	pub fn init(
+	pub fn create(
 		sample_rate: c_uint,
 		channels: c_uint,
 		time_ratio: f64,
@@ -353,7 +353,7 @@ pub const State = opaque {
 		return if (s) |state| @ptrCast(state) else error.OutOfMemory;
 	}
 
-	pub fn deinit(self: *State) void {
+	pub fn destroy(self: *State) void {
 		c.rubberband_delete(@ptrCast(self));
 	}
 
