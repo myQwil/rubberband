@@ -4,7 +4,7 @@ const std = @import("std");
 const rb = @import("rubberband");
 
 pub fn main(_: std.process.Init) !void {
-	const state: *rb.State = try .init(48000, 2, 1, 1, .{
+	const state: *rb.State = try .create(48000, 2, 1, 1, .{
 		.process = .realtime,
 		// .transients = .crisp,
 		// .detector = .compound,
@@ -17,7 +17,7 @@ pub fn main(_: std.process.Init) !void {
 		.channels = .together,
 		.engine = .finer,
 	});
-	defer state.deinit();
+	defer state.destroy();
 
 	std.debug.print("engine version: {}\n", .{ state.getEngineVersion() });
 

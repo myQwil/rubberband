@@ -1,4 +1,5 @@
 const std = @import("std");
+const Translator = @import("translate_c").Translator;
 const LinkMode = std.builtin.LinkMode;
 
 const Options = struct {
@@ -103,19 +104,16 @@ pub fn build(b: *std.Build) !void {
 
 	//---------------------------------------------------------------------------
 	// Zig module
-	const c_mod = blk: {
-		const c = b.addTranslateC(.{
-			.root_source_file = upstream.path("rubberband/rubberband-c.h"),
-			.target = target,
-			.optimize = optimize,
-		});
-		break :blk c.createModule();
-	};
+	const c: Translator = .init(b.dependency("translate_c", .{}), .{
+		.c_source_file = upstream.path("rubberband/rubberband-c.h"),
+		.target = target,
+		.optimize = optimize,
+	});
 	const zig_mod = b.addModule("rubberband", .{
 		.root_source_file = b.path("rubberband.zig"),
 		.target = target,
 		.optimize = optimize,
-		.imports = &.{ .{ .name = "cdef", .module = c_mod } },
+		.imports = &.{ .{ .name = "c", .module = c.mod } },
 	});
 	zig_mod.linkLibrary(lib);
 

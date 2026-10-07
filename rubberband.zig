@@ -1,4 +1,4 @@
-const c = @import("cdef");
+const c = @import("c");
 const Oom = @import("std").mem.Allocator.Error;
 
 pub const Options = packed struct(c_uint) {
