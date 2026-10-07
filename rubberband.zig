@@ -822,12 +822,12 @@ pub const State = opaque {
 	/// are not guaranteed to be RT-safe in any conditions as they may
 	/// construct messages by allocation.
 	pub fn setDebugLevel(self: *State, level: DebugLevel) void {
-		c.rubberband_set_debug_level(@ptrCast(self), @intFromEnum(level));
+		c.rubberband_set_debug_level(@ptrCast(self), @backingInt(level));
 	}
 
 	/// Set the default level of debug output for subsequently
 	/// constructed stretchers.
 	pub fn setDefaultDebugLevel(level: DebugLevel) void {
-		c.rubberband_set_default_debug_level(@intFromEnum(level));
+		c.rubberband_set_default_debug_level(@backingInt(level));
 	}
 };
