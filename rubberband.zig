@@ -1,5 +1,6 @@
-const c = @import("c");
 const Oom = @import("std").mem.Allocator.Error;
+
+const c = @import("c");
 
 pub const Options = packed struct(c_uint) {
 	/// How the time-stretcher will be invoked.
@@ -328,7 +329,7 @@ pub const State = opaque {
 	/// stretcher depends strongly on whether offline or real-time mode
 	/// is selected on construction (via `Option.process_offline` or
 	/// `Option.process_realtime` - offline is the default).
-	/// 
+	///
 	/// In offline mode, you must provide the audio block-by-block in
 	/// two passes: in the first pass calling `study()`, in the second
 	/// pass calling `process()` and receiving the output via
@@ -378,13 +379,13 @@ pub const State = opaque {
 	/// ratio of 2.0 would make the audio twice as long (i.e. halve the
 	/// tempo); 0.5 would make it half as long (i.e. double the tempo);
 	/// 1.0 would leave the duration unaffected.
-	/// 
+	///
 	/// If the stretcher was constructed in Offline mode, the time
 	/// ratio is fixed throughout operation; this function may be
 	/// called any number of times between construction (or a call to
 	/// `reset()`) and the first call to `study()` or `process()`, but may
 	/// not be called after `study()` or `process()` has been called.
-	/// 
+	///
 	/// If the stretcher was constructed in real-time mode, the time
 	/// ratio may be varied during operation; this function may be
 	/// called at any time, so long as it is not called concurrently
@@ -444,7 +445,7 @@ pub const State = opaque {
 	/// `formant_preserved` option as appropriate. Use this function
 	/// only if you want to shift formants by a distance other than
 	/// that of the overall pitch shift.
-	/// 
+	///
 	/// This function is supported only in the R3 (`engine_finer`)
 	/// engine. It has no effect in R2 (`engine_faster`).
 	///
@@ -468,12 +469,12 @@ pub const State = opaque {
 	/// Return the last formant scaling ratio that was set with
 	/// `setFormantScale`, or 0.0 if the default automatic scaling is in
 	/// effect.
-	/// 
+	///
 	/// This function is supported only in the R3 (`engine_finer`)
 	/// engine. It always returns 0.0 in R2 (`engine_faster`).
 	///
 	/// This function was added in Rubber Band Library v3.0.
-	pub fn getFormantScale(self:*const State) f64 {
+	pub fn getFormantScale(self: *const State) f64 {
 		return c.rubberband_get_formant_scale(@ptrCast(@constCast(self)));
 	}
 
@@ -516,7 +517,7 @@ pub const State = opaque {
 	///
 	/// In Offline mode, padding and delay compensation are handled
 	/// internally and both functions always return zero.
-	/// 
+	///
 	/// This function was added in Rubber Band Library v3.0. Previously
 	/// it was called getLatency(). It was renamed to avoid confusion
 	/// with the number of samples needed at input to cause a block of
@@ -600,7 +601,7 @@ pub const State = opaque {
 	/// Ask the stretcher how many audio sample frames should be
 	/// provided as input in order to ensure that some more output
 	/// becomes available.
-	/// 
+	///
 	/// If your application has no particular constraint on processing
 	/// block size and you are able to provide any block size as input
 	/// for each cycle, then your normal mode of operation would be to
@@ -712,7 +713,7 @@ pub const State = opaque {
 	/// expected to be in the range -1.0f to +1.0f. "frames" supplies
 	/// the number of audio sample frames available in "input". If
 	/// "frames" is zero, "input" may be NULL.
-	/// 
+	///
 	/// Set "final" to true if this is the last block of data that will
 	/// be provided to study() before the first process() call.
 	pub fn study(
@@ -750,7 +751,7 @@ pub const State = opaque {
 
 	/// Ask the stretcher how many audio sample frames of output data
 	/// are available for reading (via retrieve()).
-	/// 
+	///
 	/// This function returns 0 if no frames are available: this
 	/// usually means more input data needs to be provided, but if the
 	/// stretcher is running in threaded mode it may just mean that not
